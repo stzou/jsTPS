@@ -9,4 +9,4 @@ class jsTPS_Transaction {
 
     }
 }
-export default jsTPS
+export default jsTPS_Transaction

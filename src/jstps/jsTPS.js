@@ -1,24 +1,25 @@
-import jsTPS_Transaction from 'jsTPS_Transaction';
 
-export class jsTPS extends Component {
-    state = {
-        mostRecentTransaction: -1,
-        performingDo: false,
-        performingUndo: false,
+
+export class jsTPS {
+    constructor(){
+        this.mostRecentTransaction = -1;
+        this.performingDo = false;
+        this.performingUndo = false;
+        this.transactions = [];
     }
-    transactions = [];
+    
 
     isPerformingDo = () => {
-        return this.state.isPerformingDo;
+        return this.isPerformingDo;
     }
 
     isPerformingUndo = () => {
-        return this.state.performingUndo;
+        return this.performingUndo;
     }
     
     addTransaction = (transaction) => {
-        if ((this.statemostRecentTransaction < 0)|| (this.state.mostRecentTransaction < (transactions.length-1))) {
-            for (var i = transactions.length-1; i > this.state.mostRecentTransaction; i--) {
+        if ((this.mostRecentTransaction < 0)|| (this.mostRecentTransaction < (this.transactions.length-1))) {
+            for (var i = this.transactions.length-1; i > this.mostRecentTransaction; i--) {
                 this.transactions.splice(i);
             }
         }
@@ -28,17 +29,17 @@ export class jsTPS extends Component {
 
     doTransaction = () => {
         if (this.hasTransactionToRedo()) {
-            this.setState({performingDo: true});
-            transaction = transactions[mostRecentTransaction+1];
+            this.performingDo = true;
+            var transaction = this.transactions[this.mostRecentTransaction+1];
             transaction.doTransaction();
-            this.setState({mostRecentTransaction: this.state.mostRecentTransaction+1});
-            this.setState({performingDo: false});
+            this.mostRecentTransaction = this.mostRecentTransaction+1;
+            this.performingDo = false;
         }
     }
     
     peekUndo = () => {
         if (this.hasTransactionToUndo()) {
-            return transactions[mostRecentTransaction];
+            return this.transactions[this.mostRecentTransaction];
         }
         else
             return null;
@@ -46,7 +47,7 @@ export class jsTPS extends Component {
       
     peekDo() {
         if (this.hasTransactionToRedo()) {
-            return transactions[mostRecentTransaction+1];
+            return this.transactions[this.mostRecentTransaction+1];
         }
         else
             return null;
@@ -54,17 +55,17 @@ export class jsTPS extends Component {
 
     undoTransaction = () => {
         if (this.hasTransactionToUndo()) {
-            this.setState({performingUndo: true});
-            transaction = transactions[mostRecentTransaction];
+            this.performingDo = true;
+            var transaction = this.transactions[this.mostRecentTransaction];
             transaction.undoTransaction();
-            this.setState({mostRecentTransaction: this.state.mostRecentTransaction-1});
-            this.setState({performingUndo: false});
+            this.mostRecentTransaction = this.mostRecentTransaction-1;
+            this.performingDo = false;
         }
     }
 
     clearAllTransactions = () => {
-        transactions = [];
-        this.setState({mostRecentTransaction: -1});   
+        this.transactions = [];
+        this.mostRecentTransaction = -1;   
     }
     
     getSize = () => {
@@ -72,27 +73,27 @@ export class jsTPS extends Component {
     }
 
     getRedoSize = () => {
-        return this.getSize() - this.state.mostRecentTransaction - 1;
+        return this.getSize() - this.mostRecentTransaction - 1;
     }
     
     getUndoSize = () => {
-        return this.state.mostRecentTransaction + 1;
+        return this.mostRecentTransaction + 1;
     }
     
     hasTransactionToUndo = () => {
-        return this.state.mostRecentTransaction >= 0;
+        return this.mostRecentTransaction >= 0;
     }
 
     hasTransactionToRedo = () => {
-        return this.state.mostRecentTransaction < (transactions.size()-1);
+        return this.mostRecentTransaction < (this.transactions.length-1);
     }
 
     toString = () => {
-        let text = "--Number of Transactions: " + transactions.size() + "\n";
-        text += "--Current Index on Stack: " + this.state.mostRecentTransaction + "\n";
+        let text = "--Number of Transactions: " + this.transactions.length + "\n";
+        text += "--Current Index on Stack: " + this.mostRecentTransaction + "\n";
         text += "--Current Transaction Stack:\n";
-        for (var i = 0; i <= this.state.mostRecentTransaction; i++) {
-            jT = transactions[i];
+        for (var i = 0; i <= this.mostRecentTransaction; i++) {
+            var jT = this.transactions[i];
             text += "----" + jT.toString() + "\n";
         }
         return text;
